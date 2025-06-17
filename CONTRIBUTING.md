@@ -2,17 +2,14 @@ Necessary Tools & Dependencies
 
 Python 3.8+
 
-FFmpeg
-MoviePy depends on having the ffmpeg binary in PATH.
+FFmpeg: MoviePy depends on having the ffmpeg binary in PATH.
 On macOS: brew install ffmpeg
 On Ubuntu: sudo apt update && sudo apt install ffmpeg
 On Windows: download from ffmpeg.org and add to PATH.
 
-MoviePy
-We’re using MoviePy for simplicity. Under the hood it calls ffmpeg to do the trim. Version ≥1.0 is recommended.
+MoviePy: We’re using MoviePy for simplicity. Under the hood it calls ffmpeg to do the trim. Version ≥1.0 is recommended.
 
-pytest
-For running the unit tests.
+pytest: For running the unit tests.
 
 
 Planned Improvements:
