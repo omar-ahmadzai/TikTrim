@@ -66,3 +66,10 @@ def save_video(clip: VideoFileClip, output_path: str) -> None:
     # TODO: Add any codec or ffmpeg parameters if needed.
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     clip.write_videofile(output_path, codec="libx264", audio_codec="aac")
+
+def batch_trim(input_folder: str, output_folder: str, end_length: float = None):
+    """
+    Iterate over every .mp4 in input_folder, trim them, and save to output_folder.
+    """
+    # TODO: glob all .mp4, call load_video()/trim_video()/save_video()
+
