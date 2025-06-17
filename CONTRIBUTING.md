@@ -1,6 +1,6 @@
-#Necessary Tools & Dependencies and Planned Improvements
+# Necessary Tools & Dependencies and Planned Improvements
 
-##Python 3.8+
+## Python 3.8+
 
 FFmpeg: MoviePy depends on having the ffmpeg binary in PATH.
   - On macOS: brew install ffmpeg
@@ -13,12 +13,12 @@ pytest: For running the unit tests.
 
 
 
-##Planned Improvements:
+## Planned Improvements:
   - Smart end detection: Analyze audio waveform to find that “TikTok end-card” music pattern.
   - Batch processing: Loop through a whole folder of downloads.
   - GUI wrapper: Simple desktop app for non-tech users.
   - Docker container: For consistent environment and CI testing.
 
-##CLI Improvements:
+## CLI Improvements:
   - Add flags like --dry-run (to just print what would happen without writing a file).
   - Verbosity levels (-v or --verbose) to log how many seconds are detected and trimmed.
