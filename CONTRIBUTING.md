@@ -12,6 +12,7 @@ MoviePy: We’re using MoviePy for simplicity. Under the hood it calls ffmpeg to
 pytest: For running the unit tests.
 
 
+
 Planned Improvements:
   - Smart end detection: Analyze audio waveform to find that “TikTok end-card” music pattern.
   - Batch processing: Loop through a whole folder of downloads.
