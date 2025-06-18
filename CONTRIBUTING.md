@@ -2,7 +2,7 @@
 
 ## Python 3.8+
 
-FFmpeg: MoviePy depends on having the ffmpeg binary in PATH.
+FFmpeg: MoviePy depends on having the ffmpeg binary in PATH.  
 (Documentation: https://kkroening.github.io/ffmpeg-python/)
   - On macOS: brew install ffmpeg
   - On Ubuntu: sudo apt update && sudo apt install ffmpeg
