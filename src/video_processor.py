@@ -46,6 +46,11 @@ def trim_video(clip: VideoFileClip, end_to_strip: float) -> VideoFileClip:
     Returns: a new VideoFileClip without the end segment.
 
     """
+    # TODO: Add robust error handling for this function
+    # - Validate that 'clip' is instance of VideoFileClip.
+    # - Check 'end_to_strip' is a non-negative integer or float.
+    # - Handle cases where 'clip.duration' is None or non-positive. (read the docs if <=0 or None is possible)
+    # NOTE: Consider raising exceptions (TypeError, ValueError).
     total = clip.duration
     new_end = max(0, total - end_to_strip)
     return clip.subclip(0, new_end)
