@@ -1,19 +1,47 @@
 import os
+from os import PathLike
 from moviepy.editor import VideoFileClip
 
 
-def load_video(path: str) -> VideoFileClip:
+def load_video(path: str | bytes | PathLike) -> VideoFileClip:
     """
-    Load a video file from disk.
-    
+    Load a video .mp4 file from disk.
+
     Args:
-        path: Path to the downloaded TikTok .mp4
+        path: Path (string, bytes, or PathLike) to an .mp4 file.
 
-    Returns: a MoviePy clip object.
+    Returns:
+        A MoviePy VideoFileClip instance.
+
+    Raises:
+        TypeError: if `path` isn’t path‑like or has the wrong extension.
+        FileNotFoundError: if the file does not exist.
+        RuntimeError: if MoviePy/ffmpeg fails to load the clip.
 
     """
-    # TODO: Validate file exists, check extension, etc.
-    return VideoFileClip(path)
+    # Path-like check
+    if not isinstance(path, (str, bytes, PathLike)):
+        raise TypeError(f"Invalid path-like object: {path!r}")
+
+    # Convert to string so both path and bytes word
+    filename = os.fspath(path)
+
+    # Existence check
+    if not os.path.exists(filename):
+        raise FileNotFoundError(f"No such file as: {path!r}!")
+
+    # Extension check
+    extension = os.path.splitext(filename)[1].lower()
+    if extension != ".mp4":
+        raise TypeError(f"Unsupported extension {extension!r}; only .mp4 is allowed")
+
+    # Try loading and capture any FFmpeg errors
+    try:
+        clip = VideoFileClip(path)
+    except Exception as error:
+        raise RuntimeError(f"Failed to load video {filename!r}") from error
+
+    return clip
 
 
 def detect_end_segment_length(clip: VideoFileClip) -> float:
