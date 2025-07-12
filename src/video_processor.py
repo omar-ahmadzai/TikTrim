@@ -74,14 +74,30 @@ def trim_video(clip: VideoFileClip, end_to_strip: float) -> VideoFileClip:
     Returns: a new VideoFileClip without the end segment.
 
     """
-    # TODO: Add robust error handling for this function
-    # - Validate that 'clip' is instance of VideoFileClip.
-    # - Check 'end_to_strip' is a non-negative integer or float.
-    # - Handle cases where 'clip.duration' is None or non-positive. (read the docs if <=0 or None is possible)
-    # NOTE: Consider raising exceptions (TypeError, ValueError).
+    # -------------------- Input Validation --------------------
+    if not isinstance(clip, VideoFileClip):
+        raise TypeError("The loaded clip must be of type VideoFileClip.")
+
+    if not isinstance(end_to_strip, (int, float)):
+        raise TypeError("end_to_strip must be an integer/float")
+
+    if end_to_strip < 0:
+        raise ValueError("end_to_strip cannot be Negative")
+
     total = clip.duration
+
+    if total is None or total <= 0:
+        raise AttributeError(f"Duration of the clip file is invalid: {clip.duration}")
+
+    if end_to_strip >= clip.duration:
+        raise ValueError("end_to_strip cannot be >= clip.duration")
+
+    # -------------------- Main Logic --------------------
     new_end = max(0, total - end_to_strip)
-    return clip.subclip(0, new_end)
+    try:
+        return clip.subclip(0, new_end)
+    except Exception as error:
+        raise RuntimeError(f"Failed to trim the clip: {error}") from error
 
 
 def save_video(clip: VideoFileClip, output_path: str) -> None:
