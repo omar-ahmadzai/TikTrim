@@ -90,7 +90,7 @@ def trim_video(clip: VideoFileClip, end_to_strip: float) -> VideoFileClip:
         raise AttributeError(f"Duration of the clip file is invalid: {clip.duration}")
 
     if end_to_strip >= clip.duration:
-        raise ValueError("end_to_strip cannot be >= clip.duration")
+        raise ValueError("end_to_strip cannot be >= (greater than or equal to) clip.duration")
 
     # -------------------- Main Logic --------------------
     new_end = max(0, total - end_to_strip)
