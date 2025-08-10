@@ -1,6 +1,6 @@
 import os
 from os import PathLike
-from moviepy.editor import VideoFileClip
+from moviepy import VideoFileClip
 
 
 def load_video(path: str | bytes | PathLike) -> VideoFileClip:
@@ -95,7 +95,7 @@ def trim_video(clip: VideoFileClip, end_to_strip: float) -> VideoFileClip:
     # -------------------- Main Logic --------------------
     new_end = max(0, total - end_to_strip)
     try:
-        return clip.subclip(0, new_end)
+        return clip.subclipped(0, new_end)
     except Exception as error:
         raise RuntimeError(f"Failed to trim the clip: {error}") from error
 
@@ -113,8 +113,22 @@ def save_video(clip: VideoFileClip, output_path: str) -> None:
 
     """
     # TODO: Add any codec or ffmpeg parameters if needed.
+
+    # Error handling
+    if not isinstance(clip, VideoFileClip):
+        raise TypeError("Clip must be of type VideoFileClip")
+    if not isinstance(output_path, str):
+        raise TypeError("output_path must be of type str")
+    if not output_path.endswith(".mp4"):
+        file_name = os.path.basename(clip.filename)
+        output_path = os.path.join(output_path, file_name)
+
+    # Creating the files in the path if they don't exist
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
+    # Saving the VideoFileClip to the output path
     clip.write_videofile(output_path, codec="libx264", audio_codec="aac")
+
 
 def batch_trim(input_folder: str, output_folder: str, end_length: float = None):
     """
@@ -122,3 +136,23 @@ def batch_trim(input_folder: str, output_folder: str, end_length: float = None):
     """
     # TODO: glob all .mp4, call load_video()/trim_video()/save_video()
 
+    # Error handling the inputs
+    if not isinstance(input_folder, str) or not isinstance(output_folder, str):
+        raise TypeError("Folder path should be of type str!")
+    
+    if not isinstance(end_length, float):
+        raise TypeError("End length must be of type float")
+    
+    if not os.path.isdir(input_folder) or not os.path.isdir(output_folder):
+        raise FileNotFoundError("The path provided is not invalid")
+
+    # getting a list of all files in the input folder
+    folder = os.listdir(input_folder)
+
+    # Trimming every video in the folder and saving t in the output directory
+    for i in folder:
+        if i.endswith(".mp4"):
+            video_path = os.path.join(input_folder, i)
+            video_clip = load_video(video_path)
+            output_path = os.path.join(output_folder, i)
+            save_video(trim_video(video_clip, detect_end_segment_length(video_clip)), output_path)
