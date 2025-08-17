@@ -5,6 +5,7 @@ from librosa import feature as feature
 import librosa
 import logging
 
+
 def load_video(path: str | bytes | PathLike) -> VideoFileClip:
     """
     Load a video .mp4 file from disk.
@@ -95,19 +96,15 @@ def detect_end_segment_length(clip: VideoFileClip) -> float:
     # here we just calculate frames till the wave becomes bigger than 0.001
     # which means it is not quit anymore.
     frames = 0
-    for num in rms[0][::-1]:
+    for num in rms[0][0][::-1]:
+        print(num)
         if num > 0.001:
             break
         frames += 1
 
-    # checking to be sure that we don't cut a part that we don't cut the entire video
-    # even if we checked with if clip.audio that the audio should exist in the video.
-    if frames >= clip.duration:
-        return 0.0
-    # we change the frames back to seconds adding one more for a better result(maybe).
-    else:
-        return (frames * 600 / sr) + 1
+    return round((frames * 600 / sr) + 1.3, 2)
     # sorry that if there is any mistake.
+
 
 def trim_video(clip: VideoFileClip, end_to_strip: float) -> VideoFileClip:
     """
