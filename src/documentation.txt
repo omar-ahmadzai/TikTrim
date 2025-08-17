@@ -1,0 +1,17 @@
+detect segment length() func:
+
+Librosa is an advanced lib for python that has the funcs needed for detecting all the bellow.
+
+For this librosa will take the clip, load it and turn it into numbers that represent
+samples of the sound -> numbers change to floating point numbers. As you know computers don't
+understand anything else but numbers so we have to change the audio to numbers and lower numbers mean quite sound
+higher numbers mean louder sound.
+we take advantage of this, since the last part of tiktok videos will be quite we can detect how much should be cut from
+the last portion of the video.
+
+Then we use RMS the (Root Mean Square) that is used to measure the strength or energy of a signal(audio)
+
+We use Rms to measure the loudness of the audio from given samples(numbers).
+
+We do this cause the numbers just show us high and low since pos and neg cancel each other
+rms takes care of it by doing some math to show loudness or the waves of the audio.

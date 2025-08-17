@@ -1,7 +1,9 @@
 import os
 from os import PathLike
 from moviepy import VideoFileClip
-
+from librosa import feature as feature
+import librosa
+import logging
 
 def load_video(path: str | bytes | PathLike) -> VideoFileClip:
     """
@@ -59,8 +61,53 @@ def detect_end_segment_length(clip: VideoFileClip) -> float:
     """
     # TODO: collaborators implement logic here.
     # For a first pass, return a fixed number like 3.0 or read from config.
-    return 3.0
 
+    """For this I will use a library called librosa to take the clip, load it and turn it into numbers
+    -> samples -> floating point numbers
+    
+    we use RMS then to show loudness in the raw data we receive.
+    
+    for more info you can read documentation.txt file below the detect.... func. 
+    
+    """
+
+    logging.basicConfig(filename="logs.txt", level=logging.INFO)
+
+    # we will take the clip and make it a wav file for it to work with librosa
+    # this will check if there is audio in the clip
+    if not clip.audio:
+        logging.error("Clip is corrupted or video has no audio track")
+        raise RuntimeError("Clip is corrupted or video has no audio track!!!")
+
+    # this will change the audio. to audio.wav
+    clip.audio.write_audiofile("audio.wav")
+    try:
+        # loading with librosa to change the audio into samples
+        # y is raw audio samples
+        # sr is the sampling rate -> number of samples per second
+        y, sr = librosa.load("audio.wav", sr=None, mono=False)
+        # rms is to calculate the signal's loudness or energy over time
+        rms = feature.rms(y=y, hop_length=600)
+    except Exception as e:
+        logging.error(e)
+        raise e
+
+    # here we just calculate frames till the wave becomes bigger than 0.001
+    # which means it is not quit anymore.
+    frames = 0
+    for num in rms[0][::-1]:
+        if num > 0.001:
+            break
+        frames += 1
+
+    # checking to be sure that we don't cut a part that we don't cut the entire video
+    # even if we checked with if clip.audio that the audio should exist in the video.
+    if frames >= clip.duration:
+        return 0.0
+    # we change the frames back to seconds adding one more for a better result(maybe).
+    else:
+        return (frames * 600 / sr) + 1
+    # sorry that if there is any mistake.
 
 def trim_video(clip: VideoFileClip, end_to_strip: float) -> VideoFileClip:
     """
